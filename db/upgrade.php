@@ -38,38 +38,24 @@ defined('MOODLE_INTERNAL') || die();
  * @return bool
  */
 function xmldb_videofile_upgrade($oldversion) {
-    global $CFG, $DB;
+    global $DB;
 
     $dbman = $DB->get_manager(); // Loads ddl manager and xmldb classes.
 
     // Added width and height fields.
     if ($oldversion < 2013071701) {
         $table = new xmldb_table('videofile');
-        $widthfield = new xmldb_field('width',
-                                      XMLDB_TYPE_INTEGER,
-                                      '4',
-                                      XMLDB_UNSIGNED,
-                                      XMLDB_NOTNULL,
-                                      null,
-                                      '800',
-                                      'introformat');
-        $heightfield = new xmldb_field('height',
-                                       XMLDB_TYPE_INTEGER,
-                                       '4',
-                                       XMLDB_UNSIGNED,
-                                       XMLDB_NOTNULL,
-                                       null,
-                                       '500',
-                                       'width');
+        $w = new xmldb_field('width', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '800', 'introformat');
+        $h = new xmldb_field('height', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '500', 'width');
 
         // Add width field.
-        if (!$dbman->field_exists($table, $widthfield)) {
-            $dbman->add_field($table, $widthfield);
+        if (!$dbman->field_exists($table, $w)) {
+            $dbman->add_field($table, $w);
         }
 
         // Add height field.
-        if (!$dbman->field_exists($table, $heightfield)) {
-            $dbman->add_field($table, $heightfield);
+        if (!$dbman->field_exists($table, $h)) {
+            $dbman->add_field($table, $h);
         }
 
         /* Once we reach this point, we can store the new version and
@@ -81,18 +67,11 @@ function xmldb_videofile_upgrade($oldversion) {
     // Added responsive flag field.
     if ($oldversion < 2013092200) {
         $table = new xmldb_table('videofile');
-        $responsivefield = new xmldb_field('responsive',
-                                           XMLDB_TYPE_INTEGER,
-                                           '4',
-                                           XMLDB_UNSIGNED,
-                                           XMLDB_NOTNULL,
-                                           null,
-                                           '0',
-                                           'height');
+        $resp = new xmldb_field('responsive', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'height');
 
         // Add field if it doesn't already exist.
-        if (!$dbman->field_exists($table, $responsivefield)) {
-            $dbman->add_field($table, $responsivefield);
+        if (!$dbman->field_exists($table, $resp)) {
+            $dbman->add_field($table, $resp);
         }
 
         /* Once we reach this point, we can store the new version and

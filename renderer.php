@@ -44,16 +44,12 @@ class mod_videofile_renderer extends plugin_renderer_base {
      * @return string
      */
     public function video_header($videofile) {
-        global $CFG;
 
         $output = '';
-
         $name = format_string($videofile->get_instance()->name, true, $videofile->get_course());
         $title = $this->page->course->shortname . ': ' . $name;
-
         $coursemoduleid = $videofile->get_course_module()->id;
-        $context = context_module::instance($coursemoduleid);
-
+        
         // Add videojs css and js files.
         $this->page->requires->css('/mod/videofile/video-js.css');
         $this->page->requires->js('/mod/videofile/video.min.js', true);
@@ -222,8 +218,7 @@ class mod_videofile_renderer extends plugin_renderer_base {
 
                     /* Strings not in language files come back as [[string]], don't
                        use those for labels. */
-                    if (substr($maybelabel, 0, 2) !== '[[' ||
-                            substr($maybelabel, -2, 2) === ']]') {
+                    if (substr($maybelabel, 0, 2) !== '[[' || substr($maybelabel, -2, 2) === ']]') {
                         $label = $maybelabel;
                     }
                 }
@@ -266,7 +261,7 @@ class mod_videofile_renderer extends plugin_renderer_base {
                 }
                 $filename = pathinfo($file->get_filename(), PATHINFO_FILENAME);
                 $extension = pathinfo($file->get_filename(), PATHINFO_EXTENSION);
-                $videooutput .= html_writer::tag('a', $filename, ['href' => $videourl]);
+                $videooutput .= html_writer::tag('a', $filename . '.' . $extension, ['href' => $videourl]);
             }
         }
         $output = html_writer::tag('p', get_string('video_not_playing', 'videofile', $videooutput), []);

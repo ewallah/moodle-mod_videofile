@@ -302,8 +302,6 @@ class videofile {
      * @return void
      */
     protected function save_files($formdata) {
-        global $DB;
-
         // Storage of files from the filemanager (videos).
         $draftitemid = $formdata->videos;
         if ($draftitemid) {

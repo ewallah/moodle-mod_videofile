@@ -37,7 +37,7 @@ class backup_videofile_activity_structure_step extends backup_activity_structure
      */
     protected function define_structure() {
 
-       // Define each element separated.
+        // Define each element separated.
         $arr = ['name', 'intro', 'introformat', 'width', 'height', 'timecreated', 'timemodified'];
         $videofile = new backup_nested_element('videofile', ['id'], $arr);
 
