@@ -55,7 +55,6 @@ class restore_videofile_activity_structure_step extends restore_activity_structu
         global $DB;
 
         $data = (object)$data;
-        $oldid = $data->id;
         $data->course = $this->get_courseid();
 
         $data->timecreated = $this->apply_date_offset($data->timecreated);

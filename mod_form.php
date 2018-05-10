@@ -81,7 +81,7 @@ class mod_videofile_mod_form extends moodleform_mod {
         $mform->setDefault('height', $config->height);
 
         // Responsive.
-        $mform->addElement('advcheckbox', 'responsive',  get_string('responsive', 'videofile'),
+        $mform->addElement('advcheckbox', 'responsive', get_string('responsive', 'videofile'),
             get_string('responsive_label', 'videofile'));
         $mform->setType('responsive', PARAM_INT);
         $mform->addHelpButton('responsive', 'responsive', 'videofile');
@@ -126,7 +126,7 @@ class mod_videofile_mod_form extends moodleform_mod {
             $draftitemid = file_get_submitted_draft_itemid('posters');
             file_prepare_draft_area($draftitemid, $this->context->id, 'mod_videofile', 'posters', 0, $options);
             $defaultvalues['posters'] = $draftitemid;
-            $options = ['subdirs' => false, 'maxbytes' => 0, 'maxfiles' => -1);
+            $options = ['subdirs' => false, 'maxbytes' => 0, 'maxfiles' => -1];
             $draftitemid = file_get_submitted_draft_itemid('captions');
             file_prepare_draft_area($draftitemid, $this->context->id, 'mod_videofile', 'captions', 0, $options);
             $defaultvalues['captions'] = $draftitemid;
