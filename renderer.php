@@ -49,7 +49,7 @@ class mod_videofile_renderer extends plugin_renderer_base {
         $name = format_string($videofile->get_instance()->name, true, $videofile->get_course());
         $title = $this->page->course->shortname . ': ' . $name;
         $coursemoduleid = $videofile->get_course_module()->id;
-        
+
         // Add videojs css and js files.
         $this->page->requires->css('/mod/videofile/video-js.css');
         $this->page->requires->js('/mod/videofile/video.min.js', true);
@@ -200,7 +200,7 @@ class mod_videofile_renderer extends plugin_renderer_base {
         $first = true;
         $captions = $this->util_get_area_files($contextid, 'captions');
         foreach ($captions as $file) {
-            if ($mimetype = $file->get_mimetype()) {
+            if ($file->get_mimetype()) {
                 $captionurl = $this->util_get_file_url($file);
 
                 // Get or construct caption label for video.js player.
@@ -251,7 +251,7 @@ class mod_videofile_renderer extends plugin_renderer_base {
         $first = true;
         $videos = $this->util_get_area_files($contextid, 'videos');
         foreach ($videos as $file) {
-            if ($mimetype = $file->get_mimetype()) {
+            if ($file->get_mimetype()) {
                 $videourl = $this->util_get_file_url($file);
 
                 if ($first) {

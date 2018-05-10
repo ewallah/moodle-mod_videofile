@@ -126,11 +126,10 @@ function videofile_user_outline($course, $user, $mod, $videofile) {
     global $DB;
     $para = ['userid' => $user->id, 'module' => 'videofile', 'action' => 'view', 'info' => $videofile->id];
     if ($logs = $DB->get_records('log', $para, 'time ASC')) {
-        $numviews = count($logs);
         $lastlog = array_pop($logs);
         $result = new stdClass();
         $result->time = $lastlog->time;
-        $result->info = get_string('numviews', '', $numviews);
+        $result->info = get_string('numviews', '', count($logs));
         return $result;
     }
     return null;
@@ -150,11 +149,10 @@ function videofile_user_complete($course, $user, $mod, $videofile) {
     global $DB;
     $para = ['userid' => $user->id, 'module' => 'videofile', 'action' => 'view', 'info' => $videofile->id];
     if ($logs = $DB->get_records('log', $para, 'time ASC')) {
-        $numviews = count($logs);
         $lastlog = array_pop($logs);
         $strmostrecently = get_string('mostrecently');
-        $strnumviews = get_string('numviews', '', $numviews);
-        echo "$strnumviews - $strmostrecently ".userdate($lastlog->time);
+        $strnumviews = get_string('numviews', '', count($logs));
+        echo "$strnumviews - $strmostrecently " . userdate($lastlog->time);
     } else {
         print_string('neverseen', 'videofile');
     }
@@ -300,8 +298,6 @@ function videofile_get_file_info($browser, $areas, $course, $cm, $context, $file
  *              just sends the file
  */
 function videofile_pluginfile($course, $cm, $context, $filearea, array $args, $forcedownload, array $options = []) {
-    global $CFG, $DB, $USER;
-
     require_once(dirname(__FILE__) . '/locallib.php');
 
     if ($context->contextlevel != CONTEXT_MODULE) {
