@@ -17,9 +17,10 @@
 /**
  * French strings for videofile.
  *
- * @package    mod_videofile
- * @copyright  2013 Jonas Nockert <jonasnockert@gmail.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_videofile
+ * @copyright 2013 Jonas Nockert <jonasnockert@gmail.com>
+ * @author    Renaat Debleu (www.ewallah.net)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();

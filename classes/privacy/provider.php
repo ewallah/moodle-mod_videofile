@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * The mod_videofile module viewed event.
+ * Privacy main class.
  *
  * @package   mod_videofile
  * @copyright 2013 Jonas Nockert <jonasnockert@gmail.com>
@@ -23,26 +23,27 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_videofile\event;
+namespace mod_videofile\privacy;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * The mod_videofile course module viewed event class.
+ * Privacy main class.
  *
  * @package   mod_videofile
  * @copyright 2013 Jonas Nockert <jonasnockert@gmail.com>
  * @author    Renaat Debleu (www.ewallah.net)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class course_module_viewed extends \core\event\course_module_viewed {
+class provider implements \core_privacy\local\metadata\null_provider {
 
     /**
-     * Init method.
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
      */
-    protected function init() {
-        $this->data['crud'] = 'r';
-        $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
-        $this->data['objecttable'] = 'videofile';
+    public static function get_reason() : string {
+        return 'privacy:metadata';
     }
 }
-

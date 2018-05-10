@@ -15,19 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    mod_videofile
- * @copyright  2013 Jonas Nockert <jonasnockert@gmail.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Define all the restore steps that will be used by the
+ * restore_videofile_activity_task.
+ *
+ * @package   mod_videofile
+ * @copyright 2013 Jonas Nockert <jonasnockert@gmail.com>
+ * @author    Renaat Debleu (www.ewallah.net)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Define all the restore steps that will be used by the
- * restore_videofile_activity_task.
- */
-
-/**
  * Structure step to restore one videofile activity.
+ *
+ * @package   mod_videofile
+ * @copyright 2013 Jonas Nockert <jonasnockert@gmail.com>
+ * @author    Renaat Debleu (www.ewallah.net)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_videofile_activity_structure_step extends restore_activity_structure_step {
 

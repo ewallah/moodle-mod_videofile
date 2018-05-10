@@ -25,8 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot .
-             '/mod/videofile/backup/moodle2/restore_videofile_stepslib.php');
+require_once($CFG->dirroot . '/mod/videofile/backup/moodle2/restore_videofile_stepslib.php');
 
 class restore_videofile_activity_task extends restore_activity_task {
     /**
@@ -40,9 +39,7 @@ class restore_videofile_activity_task extends restore_activity_task {
      * Define (add) particular steps this activity can have.
      */
     protected function define_my_steps() {
-        $this->add_step(
-            new restore_videofile_activity_structure_step('videofile_structure',
-                                                          'videofile.xml'));
+        $this->add_step( new restore_videofile_activity_structure_step('videofile_structure', 'videofile.xml'));
     }
 
     /**
@@ -52,10 +49,8 @@ class restore_videofile_activity_task extends restore_activity_task {
      * @return array
      */
     static public function define_decode_contents() {
-        $contents = array();
-        $contents[] = new restore_decode_content('videofile',
-                                                 array('intro'),
-                                                 'videofile');
+        $contents = [];
+        $contents[] = new restore_decode_content('videofile', ['intro'], 'videofile');
         return $contents;
     }
 
@@ -66,13 +61,9 @@ class restore_videofile_activity_task extends restore_activity_task {
      * @return array
      */
     static public function define_decode_rules() {
-        $rules = array();
-        $rules[] = new restore_decode_rule('VIDEOFILEVIEWBYID',
-                                           '/mod/videofile/view.php?id=$1',
-                                           'course_module');
-        $rules[] = new restore_decode_rule('VIDEOFILEINDEX',
-                                           '/mod/videofile/index.php?id=$1',
-                                           'course');
+        $rules = [];
+        $rules[] = new restore_decode_rule('VIDEOFILEVIEWBYID', '/mod/videofile/view.php?id=$1', 'course_module');
+        $rules[] = new restore_decode_rule('VIDEOFILEINDEX', '/mod/videofile/index.php?id=$1', 'course');
         return $rules;
     }
 
@@ -84,19 +75,10 @@ class restore_videofile_activity_task extends restore_activity_task {
      * @return array
      */
     static public function define_restore_log_rules() {
-        $rules = array();
-        $rules[] = new restore_log_rule('videofile',
-                                        'add',
-                                        'view.php?id={course_module}',
-                                        '{videofile}');
-        $rules[] = new restore_log_rule('videofile',
-                                        'update',
-                                        'view.php?id={course_module}',
-                                        '{videofile}');
-        $rules[] = new restore_log_rule('videofile',
-                                        'view',
-                                        'view.php?id={course_module}',
-                                        '{videofile}');
+        $rules = [];
+        $rules[] = new restore_log_rule('videofile', 'add', 'view.php?id={course_module}', '{videofile}');
+        $rules[] = new restore_log_rule('videofile', 'update', 'view.php?id={course_module}', '{videofile}');
+        $rules[] = new restore_log_rule('videofile', 'view', 'view.php?id={course_module}', '{videofile}');
         return $rules;
     }
 
@@ -112,11 +94,8 @@ class restore_videofile_activity_task extends restore_activity_task {
      * @return array
      */
     static public function define_restore_log_rules_for_course() {
-        $rules = array();
-        $rules[] = new restore_log_rule('videofile',
-                                        'view all',
-                                        'index.php?id={course}',
-                                        null);
+        $rules = [];
+        $rules[] = new restore_log_rule('videofile', 'view all', 'index.php?id={course}', null);
         return $rules;
     }
 }

@@ -17,9 +17,10 @@
 /**
  * Videofile module renderering methods are defined here.
  *
- * @package    mod_videofile
- * @copyright  2013 Jonas Nockert <jonasnockert@gmail.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_videofile
+ * @copyright 2013 Jonas Nockert <jonasnockert@gmail.com>
+ * @author    Renaat Debleu (www.ewallah.net)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -28,6 +29,11 @@ require_once($CFG->dirroot . '/mod/videofile/locallib.php');
 
 /**
  * Videofile module renderer class
+ *
+ * @package   mod_videofile
+ * @copyright 2013 Jonas Nockert <jonasnockert@gmail.com>
+ * @author    Renaat Debleu (www.ewallah.net)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_videofile_renderer extends plugin_renderer_base {
 
@@ -50,7 +56,8 @@ class mod_videofile_renderer extends plugin_renderer_base {
 
         // Add videojs css and js files.
         $this->page->requires->css('/mod/videofile/video-js.css');
-        $this->page->requires->js('/mod/videofile/video.js', true);
+        $this->page->requires->js('/mod/videofile/video.min.js', true);
+        // TODO: remove swfurl.
         // Set the videojs flash fallback url.
         $swfurl = new moodle_url('/mod/videofile/pix/moodle-logo.png');
 
@@ -58,14 +65,9 @@ class mod_videofile_renderer extends plugin_renderer_base {
         if ($videofile->get_instance()->responsive) {
             $config = get_config('videofile');
 
-            $this->page->requires->yui_module(
-                'moodle-mod_videofile-videojs',
-                'M.mod_videofile.videojs.init',
-                array($videofile->get_instance()->id,
-                      $swfurl,
-                      $videofile->get_instance()->width,
-                      $videofile->get_instance()->height,
-                      (boolean) $config->limitdimensions));
+            $this->page->requires->yui_module('moodle-mod_videofile-videojs', 'M.mod_videofile.videojs.init',
+                [$videofile->get_instance()->id, $swfurl,
+                 $videofile->get_instance()->width, $videofile->get_instance()->height, (boolean) $config->limitdimensions]);
         }
 
         // Header setup.
@@ -129,12 +131,7 @@ class mod_videofile_renderer extends plugin_renderer_base {
      */
     private function util_get_area_files($contextid, $areaname) {
         $fs = get_file_storage();
-        return $fs->get_area_files($contextid,
-                                   'mod_videofile',
-                                   $areaname,
-                                   false,
-                                   'itemid, filepath, filename',
-                                   false);
+        return $fs->get_area_files($contextid, 'mod_videofile', $areaname, false, 'itemid, filepath, filename', false);
     }
 
     /**
@@ -165,24 +162,16 @@ class mod_videofile_renderer extends plugin_renderer_base {
      * @return string the video element HTML
      */
     private function get_video_element_html($videofile, $posterurl) {
-        /* The width and height are set to auto if responsive flag is set
-           but is not ignored. They are still used to calculate proportions
-           in the javascript that handles video resizing. */
+        /* The width and height are set to auto if responsive flag is set but is not ignored. They are still used to calculate
+           proportions in the javascript that handles video resizing. */
         $width = $videofile->get_instance()->responsive ? 'auto' : $videofile->get_instance()->width;
         $height = $videofile->get_instance()->responsive ? 'auto' : $videofile->get_instance()->height;
 
         // Renders the video element.
-        return html_writer::start_tag(
-            'video',
-            array('id' => 'videofile-' . $videofile->get_instance()->id,
-                  'class' => 'video-js vjs-default-skin',
-                  'controls' => 'controls',
-                  'preload' => 'auto',
-                  'width' => $width,
-                  'height' => $height,
-                  'poster' => $posterurl,
-                  'data-setup' => '{}')
-        );
+        return html_writer::start_tag('video',
+            ['id' => 'videofile-' . $videofile->get_instance()->id, 'class' => 'video-js vjs-default-skin',
+             'controls' => 'controls', 'preload' => 'auto', 'width' => $width, 'height' => $height,
+             'poster' => $posterurl, 'data-setup' => '{}']);
     }
 
     /**

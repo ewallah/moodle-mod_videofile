@@ -17,16 +17,10 @@
 /**
  * Library of interface functions and constants for module videofile
  *
- * All the core Moodle functions, neeeded to allow the module to work
- * integrated in Moodle should be placed here.
- *
- * All the videofile specific functions, needed to implement all the module
- * logic, should go to locallib.php. This will help to save some memory when
- * Moodle is performing actions across all modules.
- *
- * @package    mod_videofile
- * @copyright  2013 Jonas Nockert <jonasnockert@gmail.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_videofile
+ * @copyright 2013 Jonas Nockert <jonasnockert@gmail.com>
+ * @author    Renaat Debleu (www.ewallah.net)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -73,13 +67,10 @@ function videofile_supports($feature) {
  * @param mod_videofile_mod_form $form
  * @return int The instance id of the new videofile instance
  */
-function videofile_add_instance(stdClass $data,
-                                mod_videofile_mod_form $form = null) {
+function videofile_add_instance(stdClass $data, mod_videofile_mod_form $form = null) {
     require_once(dirname(__FILE__) . '/locallib.php');
-
     $context = context_module::instance($data->coursemodule);
     $videofile = new videofile($context, null, null);
-
     return $videofile->add_instance($data);
 }
 
@@ -94,13 +85,10 @@ function videofile_add_instance(stdClass $data,
  * @param mod_videofile_mod_form $form
  * @return boolean
  */
-function videofile_update_instance(stdClass $data,
-                                   mod_videofile_mod_form $form = null) {
+function videofile_update_instance(stdClass $data, mod_videofile_mod_form $form = null) {
     require_once(dirname(__FILE__) . '/locallib.php');
-
     $context = context_module::instance($data->coursemodule);
     $videofile = new videofile($context, null, null);
-
     return $videofile->update_instance($data);
 }
 
@@ -116,7 +104,6 @@ function videofile_update_instance(stdClass $data,
  */
 function videofile_delete_instance($id) {
     require_once(dirname(__FILE__) . '/locallib.php');
-
     $cm = get_coursemodule_from_instance('videofile', $id, 0, false, MUST_EXIST);
     $context = context_module::instance($cm->id);
     $videofile = new videofile($context, null, null);
@@ -137,22 +124,13 @@ function videofile_delete_instance($id) {
  */
 function videofile_user_outline($course, $user, $mod, $videofile) {
     global $DB;
-
-    $logs = $DB->get_records(
-        'log',
-        array('userid' => $user->id,
-              'module' => 'videofile',
-              'action' => 'view',
-              'info' => $videofile->id),
-        'time ASC');
-    if ($logs) {
+    $para = ['userid' => $user->id, 'module' => 'videofile', 'action' => 'view', 'info' => $videofile->id];
+    if ($logs = $DB->get_records('log', $para, 'time ASC')) {
         $numviews = count($logs);
         $lastlog = array_pop($logs);
-
         $result = new stdClass();
         $result->time = $lastlog->time;
         $result->info = get_string('numviews', '', $numviews);
-
         return $result;
     }
     return null;
@@ -170,22 +148,12 @@ function videofile_user_outline($course, $user, $mod, $videofile) {
  */
 function videofile_user_complete($course, $user, $mod, $videofile) {
     global $DB;
-
-    $logs = $DB->get_records(
-        'log',
-        array('userid' => $user->id,
-              'module' => 'videofile',
-              'action' => 'view',
-              'info' => $videofile->id),
-        'time ASC');
-
-    if ($logs) {
+    $para = ['userid' => $user->id, 'module' => 'videofile', 'action' => 'view', 'info' => $videofile->id];
+    if ($logs = $DB->get_records('log', $para, 'time ASC')) {
         $numviews = count($logs);
         $lastlog = array_pop($logs);
-
         $strmostrecently = get_string('mostrecently');
         $strnumviews = get_string('numviews', '', $numviews);
-
         echo "$strnumviews - $strmostrecently ".userdate($lastlog->time);
     } else {
         print_string('neverseen', 'videofile');
@@ -198,7 +166,7 @@ function videofile_user_complete($course, $user, $mod, $videofile) {
  * @return array Array of capability strings
  */
 function videofile_get_extra_capabilities() {
-    return array('moodle/site:accessallgroups');
+    return ['moodle/site:accessallgroups'];
 }
 
 /**
@@ -215,9 +183,8 @@ function videofile_get_extra_capabilities() {
 function videofile_get_coursemodule_info($coursemodule) {
     global $DB;
 
-    $dbparams = array('id' => $coursemodule->instance);
+    $dbparams = ['id' => $coursemodule->instance];
     $fields = 'id, name, intro, introformat';
-
     if (!$videofile = $DB->get_record('videofile', $dbparams, $fields)) {
         return false;
     }
@@ -227,12 +194,8 @@ function videofile_get_coursemodule_info($coursemodule) {
     if ($coursemodule->showdescription) {
         // Convert intro to html.
         // Do not filter cached version, filters run at display time.
-        $result->content = format_module_intro('videofile',
-                                               $videofile,
-                                               $coursemodule->id,
-                                               false);
+        $result->content = format_module_intro('videofile', $videofile, $coursemodule->id, false);
     }
-
     return $result;
 }
 
@@ -246,7 +209,7 @@ function videofile_get_coursemodule_info($coursemodule) {
  * @since   0.0.1
  */
 function videofile_get_view_actions() {
-    return array('view', 'view help');
+    return ['view', 'view help'];
 }
 
 /**
@@ -254,7 +217,7 @@ function videofile_get_view_actions() {
  * @return array
  */
 function videofile_get_post_actions() {
-    return array('update', 'add');
+    return ['update', 'add'];
 }
 
 /**
@@ -269,11 +232,10 @@ function videofile_get_post_actions() {
  * @return array Array of [(string)filearea] => (string)description]
  */
 function videofile_get_file_areas($course, $cm, $context) {
-    return array(
+    return [
         'captions' => get_string('filearea_captions', 'videofile'),
         'posters' => get_string('filearea_posters', 'videofile'),
-        'videos' => get_string('filearea_videos', 'videofile'),
-    );
+        'videos' => get_string('filearea_videos', 'videofile')];
 }
 
 /**
@@ -290,15 +252,7 @@ function videofile_get_file_areas($course, $cm, $context) {
  * @param string $filename File name
  * @return file_info Instance or null if not found
  */
-function videofile_get_file_info($browser,
-                                 $areas,
-                                 $course,
-                                 $cm,
-                                 $context,
-                                 $filearea,
-                                 $itemid,
-                                 $filepath,
-                                 $filename) {
+function videofile_get_file_info($browser, $areas, $course, $cm, $context, $filearea, $itemid, $filepath, $filename) {
     global $CFG;
 
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -320,27 +274,12 @@ function videofile_get_file_info($browser,
         $filepath = is_null($filepath) ? '/' : $filepath;
         $filename = is_null($filename) ? '.' : $filename;
 
-        if (!$storedfile = $fs->get_file($context->id,
-                                         'mod_videofile',
-                                         $filearea,
-                                         0,
-                                         $filepath,
-                                         $filename)) {
+        if (!$storedfile = $fs->get_file($context->id, 'mod_videofile', $filearea, 0, $filepath, $filename)) {
             // Not found.
             return null;
         }
-
         $urlbase = $CFG->wwwroot . '/pluginfile.php';
-
-        return new file_info_stored($browser,
-                                    $context,
-                                    $storedfile,
-                                    $urlbase,
-                                    $areas[$filearea],
-                                    false,
-                                    true,
-                                    true,
-                                    false);
+        return new file_info_stored($browser, $context, $storedfile, $urlbase, $areas[$filearea], false, true, true, false);
     }
 
     // Not found.
@@ -360,13 +299,7 @@ function videofile_get_file_info($browser,
  * @return bool False if file not found, does not return if found -
  *              just sends the file
  */
-function videofile_pluginfile($course,
-                              $cm,
-                              $context,
-                              $filearea,
-                              array $args,
-                              $forcedownload,
-                              array $options=array()) {
+function videofile_pluginfile($course, $cm, $context, $filearea, array $args, $forcedownload, array $options = []) {
     global $CFG, $DB, $USER;
 
     require_once(dirname(__FILE__) . '/locallib.php');
@@ -388,8 +321,7 @@ function videofile_pluginfile($course,
 
     $fs = get_file_storage();
     $relativepath = implode('/', $args);
-    $fullpath = rtrim('/' . $context->id . '/mod_videofile/' . $filearea . '/' .
-                      $relativepath, '/');
+    $fullpath = rtrim('/' . $context->id . '/mod_videofile/' . $filearea . '/' . $relativepath, '/');
     $file = $fs->get_file_by_hash(sha1($fullpath));
 
     if (!$file || $file->is_directory()) {
@@ -407,5 +339,5 @@ function videofile_pluginfile($course,
  * @return array Status array
  */
 function videofile_reset_userdata($data) {
-    return array();
+    return [];
 }

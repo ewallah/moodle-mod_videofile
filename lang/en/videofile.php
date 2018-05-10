@@ -17,9 +17,10 @@
 /**
  * English strings for videofile.
  *
- * @package    mod_videofile
- * @copyright  2013 Jonas Nockert <jonasnockert@gmail.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_videofile
+ * @copyright 2013 Jonas Nockert <jonasnockert@gmail.com>
+ * @author    Renaat Debleu (www.ewallah.net)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -33,6 +34,7 @@ $string['videofile:view'] = 'View videofile';
 
 $string['pluginadministration'] = 'Videofile administration';
 $string['pluginname'] = 'Videofile';
+$string['privacy:metadata'] = 'The videofile module does not store any data.';
 
 $string['videofile_defaults_heading'] = 'Default values for videofile settings';
 $string['videofile_defaults_text'] = 'The values you set here define the default values that are used in the videofile settings form when you create a new videofile.';

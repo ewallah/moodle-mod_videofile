@@ -30,16 +30,19 @@ defined('MOODLE_INTERNAL') || die;
  */
 class backup_videofile_activity_structure_step extends backup_activity_structure_step {
 
+    /**
+     * Define structure
+     *
+     * @return stdClass
+     */
     protected function define_structure() {
-        // Define each element separated.
-        $videofile = new backup_nested_element('videofile', array('id'), array(
-            'name', 'intro', 'introformat',
-            'width', 'height',
-            'timecreated', 'timemodified'));
+
+       // Define each element separated.
+        $arr = ['name', 'intro', 'introformat', 'width', 'height', 'timecreated', 'timemodified'];
+        $videofile = new backup_nested_element('videofile', ['id'], $arr);
 
         // Define sources.
-        $videofile->set_source_table('videofile',
-                                     array('id' => backup::VAR_ACTIVITYID));
+        $videofile->set_source_table('videofile', ['id' => backup::VAR_ACTIVITYID]);
 
         // Define file annotations.
         $videofile->annotate_files('mod_videofile', 'intro', null);
@@ -47,8 +50,7 @@ class backup_videofile_activity_structure_step extends backup_activity_structure
         $videofile->annotate_files('mod_videofile', 'posters', null);
         $videofile->annotate_files('mod_videofile', 'captions', null);
 
-        // Return the root element (videofile), wrapped into standard
-        // activity structure.
+        // Return the root element (videofile), wrapped into standard activity structure.
         return $this->prepare_activity_structure($videofile);
     }
 }

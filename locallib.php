@@ -19,6 +19,7 @@
  *
  * @package   mod_videofile
  * @copyright 2013 Jonas Nockert <jonasnockert@gmail.com>
+ * @author    Renaat Debleu (www.ewallah.net)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -67,8 +68,6 @@ class videofile {
      *                      required.
      */
     public function __construct($coursemodulecontext, $coursemodule, $course) {
-        global $PAGE;
-
         $this->context = $coursemodulecontext;
         $this->coursemodule = $coursemodule;
         $this->course = $course;
@@ -106,17 +105,11 @@ class videofile {
         $add->responsive = $formdata->responsive;
 
         $returnid = $DB->insert_record('videofile', $add);
-        $this->instance = $DB->get_record('videofile',
-                                          array('id' => $returnid),
-                                          '*',
-                                          MUST_EXIST);
+        $this->instance = $DB->get_record('videofile',  ['id' => $returnid], '*', MUST_EXIST);
         $this->save_files($formdata);
 
         // Cache the course record.
-        $this->course = $DB->get_record('course',
-                                        array('id' => $formdata->course),
-                                        '*',
-                                        MUST_EXIST);
+        $this->course = $DB->get_record('course', ['id' => $formdata->course], '*', MUST_EXIST);
 
         return $returnid;
     }
@@ -132,14 +125,13 @@ class videofile {
 
         // Delete files associated with this videofile.
         $fs = get_file_storage();
-        if (! $fs->delete_area_files($this->context->id) ) {
+        if (! $fs->delete_area_files($this->context->id)) {
             $result = false;
         }
 
         // Delete the instance.
         // Note: all context files are deleted automatically.
-        $DB->delete_records('videofile', array('id' => $this->get_instance()->id));
-
+        $DB->delete_records('videofile', ['id' => $this->get_instance()->id]);
         return $result;
     }
 
@@ -164,10 +156,7 @@ class videofile {
         $update->responsive = $formdata->responsive;
 
         $result = $DB->update_record('videofile', $update);
-        $this->instance = $DB->get_record('videofile',
-                                          array('id' => $update->id),
-                                          '*',
-                                          MUST_EXIST);
+        $this->instance = $DB->get_record('videofile', ['id' => $update->id], '*', MUST_EXIST);
         $this->save_files($formdata);
 
         return $result;
@@ -219,12 +208,10 @@ class videofile {
             return $this->instance;
         }
         if ($this->get_course_module()) {
-            $params = array('id' => $this->get_course_module()->instance);
-            $this->instance = $DB->get_record('videofile', $params, '*', MUST_EXIST);
+            $this->instance = $DB->get_record('videofile', ['id' => $this->get_course_module()->instance], '*', MUST_EXIST);
         }
         if (!$this->instance) {
-            throw new coding_exception('Improper use of the videofile class. ' .
-                                       'Cannot load the videofile record.');
+            throw new coding_exception('Improper use of the videofile class. Cannot load the videofile record.');
         }
         return $this->instance;
     }
@@ -236,8 +223,7 @@ class videofile {
      */
     public function get_course_context() {
         if (!$this->context && !$this->course) {
-            throw new coding_exception('Improper use of the videofile class. ' .
-                                       'Cannot load the course context.');
+            throw new coding_exception('Improper use of the videofile class. Cannot load the course context.');
         }
         if ($this->context) {
             return $this->context->get_course_context();
@@ -260,11 +246,7 @@ class videofile {
         }
 
         if ($this->context->contextlevel == CONTEXT_MODULE) {
-            $this->coursemodule = get_coursemodule_from_id('videofile',
-                                                           $this->context->instanceid,
-                                                           0,
-                                                           false,
-                                                           MUST_EXIST);
+            $this->coursemodule = get_coursemodule_from_id('videofile', $this->context->instanceid, 0, false, MUST_EXIST);
             return $this->coursemodule;
         }
         return null;
@@ -294,36 +276,8 @@ class videofile {
         if (!$this->context) {
             return null;
         }
-        $params = array('id' => $this->get_course_context()->instanceid);
-        $this->course = $DB->get_record('course', $params, '*', MUST_EXIST);
-
+        $this->course = $DB->get_record('course', ['id' => $this->get_course_context()->instanceid], '*', MUST_EXIST);
         return $this->course;
-    }
-
-    /**
-     * Util function to add a message to the log.
-     *
-     * @param string $action The current action
-     * @param string $info A detailed description of the change.
-     *                     But no more than 255 characters.
-     * @param string $url The url to the videofile module instance.
-     * @return void
-     */
-    public function add_to_log($action = '', $info = '', $url='') {
-        global $USER;
-
-        $fullurl = 'view.php?id=' . $this->get_course_module()->id;
-        if ($url != '') {
-            $fullurl .= '&' . $url;
-        }
-
-        add_to_log($this->get_course()->id,
-                   'videofile',
-                   $action,
-                   $fullurl,
-                   $info,
-                   $this->get_course_module()->id,
-                   $USER->id);
     }
 
     /**
@@ -353,37 +307,19 @@ class videofile {
         // Storage of files from the filemanager (videos).
         $draftitemid = $formdata->videos;
         if ($draftitemid) {
-            file_save_draft_area_files(
-                $draftitemid,
-                $this->context->id,
-                'mod_videofile',
-                'videos',
-                0
-            );
+            file_save_draft_area_files($draftitemid, $this->context->id, 'mod_videofile', 'videos', 0);
         }
 
         // Storage of files from the filemanager (captions).
         $draftitemid = $formdata->captions;
         if ($draftitemid) {
-            file_save_draft_area_files(
-                $draftitemid,
-                $this->context->id,
-                'mod_videofile',
-                'captions',
-                0
-            );
+            file_save_draft_area_files($draftitemid, $this->context->id, 'mod_videofile', 'captions', 0);
         }
 
         // Storage of files from the filemanager (posters).
         $draftitemid = $formdata->posters;
         if ($draftitemid) {
-            file_save_draft_area_files(
-                $draftitemid,
-                $this->context->id,
-                'mod_videofile',
-                'posters',
-                0
-            );
+            file_save_draft_area_files($draftitemid, $this->context->id, 'mod_videofile', 'posters', 0);
         }
     }
 }
